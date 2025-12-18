@@ -1,12 +1,640 @@
-<%layout("/layouts/boilerplate") %>  <!--used for ejsmate template -->
+<%layout("/layouts/boilerplate") %>
+
 <style>
-  body{
-    
-    background-image: none;
-    background-size: cover;
-    width:100vw;
-  }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.85) 0%, rgba(118, 75, 162, 0.85) 100%), url('https://images.unsplash.com/photo-1555939594-58d7cb561e1a?w=1200&fit=crop') center/cover;
+        color: white;
+        padding: 150px 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        margin: -20px -15px 0 -15px;
+        min-height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 50%, rgba(118, 75, 162, 0.2) 0%, transparent 50%);
+        animation: gradientShift 15s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.8;
+        }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        animation: fadeInUp 1s ease 0.3s both;
+    }
+
+    .hero-section h1 {
+        font-size: 4.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        text-shadow: 3px 3px 15px rgba(0,0,0,0.4);
+        line-height: 1.1;
+        letter-spacing: -1px;
+    }
+
+    .hero-section .tagline {
+        font-size: 1.8rem;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        font-weight: 300;
+        opacity: 0.95;
+    }
+
+    .hero-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        animation: fadeIn 1s ease 0.6s both;
+    }
+
+    .hero-buttons .btn {
+        padding: 14px 45px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #fe424d 0%, #e03a41 100%);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(254, 66, 77, 0.5);
+    }
+
+    .btn-light {
+        background-color: white;
+        color: #667eea;
+        border-color: white;
+    }
+
+    .btn-light:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(255,255,255,0.5);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Hackathon Winning Section */
+    .hackathon-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 20px;
+        margin: 60px -15px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hackathon-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .hackathon-section::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .hackathon-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .hackathon-content h2 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 50px;
+        text-align: center;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        letter-spacing: -0.5px;
+    }
+
+    .hackathon-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        color: #333;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .hackathon-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    .hackathon-image {
+        position: relative;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .hackathon-image img {
+        width: 100%;
+        max-width: 450px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        object-fit: cover;
+        height: auto;
+        border: 5px solid rgba(255,255,255,0.1);
+        background: linear-gradient(135deg, #f5f7ff 0%, #e9ecef 100%);
+    }
+
+    .hackathon-image::before {
+        content: '🏆';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        font-size: 4rem;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    .hackathon-text h3 {
+        font-size: 2.5rem;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .hackathon-text p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 25px;
+        opacity: 0.95;
+    }
+
+    .achievement-list {
+        list-style: none;
+        margin-bottom: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .achievement-list li {
+        padding: 12px 0;
+        padding-left: 40px;
+        position: relative;
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+
+    .achievement-list li:before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ffd700;
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 100px 20px;
+        background: linear-gradient(180deg, #f9f9f9 0%, #ffffff 100%);
+    }
+
+    .features-section h2 {
+        text-align: center;
+        font-size: 3rem;
+        margin-bottom: 60px;
+        color: #333;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 45px 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg, #f5f7ff 0%, #fff 100%);
+    }
+
+    .feature-icon {
+        font-size: 3.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 25px;
+        display: inline-block;
+    }
+
+    .feature-card h3 {
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: 700;
+        font-size: 1.4rem;
+    }
+
+    .feature-card p {
+        color: #666;
+        line-height: 1.7;
+        font-size: 1rem;
+    }
+
+    /* Restaurants Preview */
+    .restaurants-preview {
+        padding: 100px 20px;
+        background: white;
+    }
+
+    .restaurants-preview h2 {
+        text-align: center;
+        font-size: 3rem;
+        margin-bottom: 60px;
+        color: #333;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .preview-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .preview-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .preview-card img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .preview-card:hover img {
+        transform: scale(1.08);
+    }
+
+    .preview-content {
+        padding: 25px;
+    }
+
+    .preview-content h3 {
+        color: #333;
+        margin-bottom: 12px;
+        font-weight: 700;
+        font-size: 1.3rem;
+    }
+
+    .preview-content p {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin: 60px -15px 0 -15px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .cta-section h2 {
+        font-size: 3rem;
+        margin-bottom: 25px;
+        font-weight: 800;
+        position: relative;
+        z-index: 1;
+        letter-spacing: -0.5px;
+    }
+
+    .cta-section p {
+        font-size: 1.3rem;
+        margin-bottom: 35px;
+        position: relative;
+        z-index: 1;
+        opacity: 0.95;
+    }
+
+    .cta-section .btn {
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2.8rem;
+        }
+
+        .hero-section .tagline {
+            font-size: 1.3rem;
+        }
+
+        .hero-buttons {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .hero-buttons .btn {
+            width: 100%;
+            padding: 12px 30px;
+        }
+
+        .hackathon-container {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .hackathon-content h2 {
+            font-size: 2.5rem;
+        }
+
+        .hackathon-text h3 {
+            font-size: 1.8rem;
+        }
+
+        .achievement-list {
+            grid-template-columns: 1fr;
+        }
+
+        .features-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+        }
+
+        .restaurants-preview h2 {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.2rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+        }
+    }
 </style>
+
 <body>
-  <img src="https://plus.unsplash.com/premium_photo-1661432769134-758550b8fedb?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmVzdGF1cmFudCUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D" alt="" width="100%">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to RestroHub</h1>
+            <p class="tagline">Discover the Best Restaurants Near You</p>
+            <div class="hero-buttons">
+                <a href="/restaurants" class="btn btn-danger">
+                    <i class="fas fa-utensils"></i> Explore Restaurants
+                </a>
+                <a href="/contact" class="btn btn-light">
+                    <i class="fas fa-envelope"></i> Get in Touch
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hackathon Winning Section -->
+    <div class="hackathon-section">
+        <div class="hackathon-content">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <span class="hackathon-badge">🏆 HACKATHON WINNER</span>
+            </div>
+            <h2>Award-Winning Restaurant Discovery Platform</h2>
+            
+            <div class="hackathon-container">
+                <div class="hackathon-image">
+                    <img src="/images/nature.jpg" alt="Hackathon Winning Project" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?w=450&h=450&fit=crop'">
+                </div>
+                
+                <div class="hackathon-text">
+                    <h3>Building the Future of Food Discovery</h3>
+                    <p>RestroHub emerged as the winning solution in our prestigious hackathon, combining innovation, user experience, and cutting-edge technology to revolutionize how people discover restaurants.</p>
+                    
+                    <ul class="achievement-list">
+                        <li>Advanced Search & Filtering</li>
+                        <li>Real-time Ratings System</li>
+                        <li>Location-Based Discovery</li>
+                        <li>Seamless User Interface</li>
+                        <li>Smart Recommendations</li>
+                        <li>Community Reviews</li>
+                    </ul>
+
+                    <p><strong>Our winning formula:</strong> We combined data-driven insights, modern UI design, and user-centric features to create a platform that truly understands what food lovers need.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container features-section">
+        <h2>Why Choose RestroHub?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Easy Search</h3>
+                    <p>Find the perfect restaurant in seconds with our advanced search and intelligent filters tailored to your preferences.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Top Ratings</h3>
+                    <p>Read authentic reviews and ratings from real customers and verified food critics worldwide.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-location-dot"></i>
+                    </div>
+                    <h3>Near You</h3>
+                    <p>Discover restaurants based on your location with instant, personalized recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restaurants Preview -->
+    <div class="container restaurants-preview">
+        <h2>Featured Restaurants</h2>
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="preview-card">
+                    <img src="https://images.unsplash.com/photo-1589985644111-d749e0c4e5b8?w=400&h=280&fit=crop" alt="Spice Hub">
+                    <div class="preview-content">
+                        <h3>Spice Hub</h3>
+                        <p><i class="fas fa-star" style="color: #ffc107;"></i> 4.5 • Patna</p>
+                        <p>Indian, Chinese cuisine</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="preview-card">
+                    <img src="https://images.unsplash.com/photo-1599521945366-40141169faa1?w=400&h=280&fit=crop" alt="Cafe City">
+                    <div class="preview-content">
+                        <h3>Cafe City</h3>
+                        <p><i class="fas fa-star" style="color: #ffc107;"></i> 4.2 • Patna</p>
+                        <p>Cafe, Continental</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="preview-card">
+                    <img src="https://images.unsplash.com/photo-1585462261346-9f18de1dd5e2?w=400&h=280&fit=crop" alt="Royal Treat">
+                    <div class="preview-content">
+                        <h3>Royal Treat</h3>
+                        <p><i class="fas fa-star" style="color: #ffc107;"></i> 4.6 • Ranchi</p>
+                        <p>Indian, Mughlai</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="preview-card">
+                    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a104?w=400&h=280&fit=crop" alt="Biryani House">
+                    <div class="preview-content">
+                        <h3>Biryani House</h3>
+                        <p><i class="fas fa-star" style="color: #ffc107;"></i> 4.7 • Hyderabad</p>
+                        <p>Hyderabadi, Biryani</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="/restaurants" class="btn btn-danger" style="padding: 14px 45px; font-size: 1.1rem; border-radius: 50px; font-weight: 600;">
+                View All Restaurants
+            </a>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <div class="container">
+            <h2>Ready to Discover Amazing Food?</h2>
+            <p>Join thousands of food lovers finding the best restaurants and culinary experiences</p>
+            <a href="/restaurants" class="btn btn-light" style="padding: 14px 45px; margin-top: 15px; font-weight: 600;">
+                Start Exploring <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
 </body>

@@ -6,35 +6,129 @@
     <title>navbar</title>
 </head>
 <style>
-.btn-outline-search{
-    background-color:#fe424d ;
-    color:white;
-    /* border-radius:25px; */
-    padding:0 1rem 0 1rem;
-  }
-.search-engine{
-  width:auto;
+.navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 0.5rem 0;
 }
 
+.navbar-brand,
+.nav-link {
+    color: white !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #ffd700 !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+    margin-left: 10px;
+}
+
+#nav-logo {
+    height: 50px;
+    width: auto;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
+}
+
+#nav-logo:hover {
+    transform: scale(1.05);
+}
+
+.search-engine {
+    width: auto;
+}
+
+.form-control {
+    border: none;
+    border-radius: 25px;
+    padding: 8px 15px;
+    background: rgba(255,255,255,0.9);
+}
+
+.form-control:focus {
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.btn-outline-search {
+    background-color: #fe424d;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 0 1.5rem;
+    margin-left: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-search:hover {
+    background-color: #e03a41;
+    box-shadow: 0 4px 10px rgba(254, 66, 77, 0.3);
+}
+
+.navbar-toggler {
+    border: none;
+    color: white !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+    outline: 2px solid rgba(255,255,255,0.3);
+}
+
+.dropdown-menu {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.dropdown-item {
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255,255,255,0.2);
+    color: #ffd700;
+}
+
+.dropdown-divider {
+    border-color: rgba(255,255,255,0.2);
+}
+
+@media (max-width: 992px) {
+    .search-engine {
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .form-control {
+        width: 100%;
+    }
+}
 </style>
 
 <body>
-<nav class="navbar navbar-expand-lg ">
+<nav class="navbar navbar-expand-lg sticky-top">
   <div class="container-fluid">
-    <a href="/home">
-      <img src="/images/navlogo.png" alt="loading." id="nav-logo">
+    <a href="/home" class="navbar-brand-link">
+      <img src="/images/navlogo.png" alt="Restaurant Logo" id="nav-logo">
     </a>
-    <a href="" class="navbar-brand">Welcome to Our Website</a>
-    <!-- <a class="navbar-brand" href="#">Main Menu</a> -->
-
-     <!-- search engine -->
-   <div class="search-engine ">
+    <a href="/home" class="navbar-brand">RestroHub</a>
+    
+    <!-- search engine -->
+   <div class="search-engine ms-auto me-3">
     <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search your destiny" aria-label="Search"/>
-      <button 
-      class="btn btn-outline-search"
-       type="submit">
-        Search
+      <input class="form-control" type="search" placeholder="Search restaurants..." aria-label="Search"/>
+      <button class="btn btn-outline-search" type="submit">
+        <i class="fas fa-search"></i>
       </button>
     </form>
    </div>
@@ -46,40 +140,38 @@
       
     <!-- navbar-content -->
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/home">Home</a>
+          <a class="nav-link" href="/home"><i class="fas fa-home"></i> Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/home/about">About</a>
-        </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="about.ejs">About</a>
-        </li> -->
-        <li class="nav-item">
-          <a class="nav-link active" href="/home/lists">Renstruants</a>
-        </li>
-          <li class="nav-item">
-          <a class="nav-link active" href="/home/about/gallery/families">service</a>
+          <a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="/home/about/gallery/families/:id/login">Login/Regitration</a>
+          <a class="nav-link" href="/restaurants"><i class="fas fa-utensils"></i> Restaurants</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#">Contact Us</a>
+          <a class="nav-link" href="/service"><i class="fas fa-concierge-bell"></i> Services</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/gallery"><i class="fas fa-images"></i> Gallery</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact"><i class="fas fa-phone"></i> Contact</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
         </li>
       
-        <li class="nav-item dropdown active">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            pages
+            <i class="fas fa-bars"></i> More
           </a>
-          <ul class="dropdown-menu">
-             <li><a class="dropdown-item" href="#"></a></li>
-              <li><a class="dropdown-item" href="#"> Administration</a></li>
-               <li><a class="dropdown-item" href="#">Education & Health</a></li>
-            <li><a class="dropdown-item" href="#">News/events</a></li>
-            <li><a class="dropdown-item" href="/feedback">Feedback</a></li>
-            <li><a class="dropdown-item" href="#">Something</a></li>
+          <ul class="dropdown-menu dropdown-menu-end">
+             <li><a class="dropdown-item" href="/signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+              <li><a class="dropdown-item" href="/feedback"><i class="fas fa-comments"></i> Feedback</a></li>
+               <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
           </ul>
         </li>
       </ul>

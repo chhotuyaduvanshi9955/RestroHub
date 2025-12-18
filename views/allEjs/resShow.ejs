@@ -1,12 +1,186 @@
+<%layout("/layouts/boilerplate") %>
 
-<%layout("/layouts/boilerplate") %> 
-<% allrestaurants.forEach(r => { %>
-  <div class="card">
-    <img src="<%= r.image %>" alt="<%= r.name %>" width="250">
-    <h3><%= r.name %></h3>
-    <p><%= r.city %></p>
-    <p><%= r.cuisine %></p>
-    <p> <%= r.rating %></p>
-    <a href="/restaurant/<%= r.id %>">View</a>
-  </div>
-<% }) %>
+<div class="restaurants-section">
+    <div class="restaurants-hero">
+        <h1>Our Restaurants</h1>
+        <p class="lead">Discover the finest dining experiences</p>
+    </div>
+
+    <div class="restaurants-content">
+        <% if(allrestaurants && allrestaurants.length > 0) { %>
+            <div class="row g-4 mt-4">
+                <% allrestaurants.forEach(r => { %>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="restaurant-card">
+                            <div class="restaurant-image">
+                                <img src="<%= r.img %>" alt="<%= r.name %>">
+                                <div class="rating-badge">
+                                    <i class="fas fa-star"></i> <%= r.rating %>
+                                </div>
+                            </div>
+                            <div class="restaurant-content">
+                                <h3><%= r.name %></h3>
+                                <div class="restaurant-details">
+                                    <p class="cuisine"><i class="fas fa-utensils"></i> <%= r.cuisine %></p>
+                                    <p class="location"><i class="fas fa-map-pin"></i> <%= r.city %></p>
+                                    <p class="description"><%= r.description %></p>
+                                </div>
+                                <div class="restaurant-footer">
+                                    <span class="price-range">
+                                        <% for(let i = 0; i < r.priceRange; i++) { %>
+                                            ₹
+                                        <% } %>
+                                    </span>
+                                    <a href="/restaurant/<%= r._id %>" class="btn btn-sm btn-danger">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="alert alert-info mt-4">No restaurants found</div>
+        <% } %>
+    </div>
+</div>
+
+<style>
+    .restaurants-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin: -20px -15px 40px -15px;
+    }
+    
+    .restaurants-hero h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .restaurants-content {
+        padding: 20px 0;
+    }
+    
+    .restaurant-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .restaurant-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+    
+    .restaurant-image {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+    }
+    
+    .restaurant-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .restaurant-card:hover .restaurant-image img {
+        transform: scale(1.1);
+    }
+    
+    .rating-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #fe424d;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 4px 10px rgba(254, 66, 77, 0.3);
+    }
+    
+    .restaurant-content {
+        padding: 20px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .restaurant-content h3 {
+        color: #333;
+        margin: 0 0 15px 0;
+        font-weight: bold;
+        font-size: 1.3rem;
+    }
+    
+    .restaurant-details {
+        flex-grow: 1;
+        margin-bottom: 15px;
+    }
+    
+    .restaurant-details p {
+        margin: 8px 0;
+        color: #666;
+        font-size: 0.95rem;
+    }
+    
+    .restaurant-details p i {
+        color: #fe424d;
+        margin-right: 8px;
+        width: 16px;
+    }
+    
+    .cuisine {
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .location {
+        color: #999;
+    }
+    
+    .description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #777;
+    }
+    
+    .restaurant-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+    
+    .price-range {
+        font-size: 1.1rem;
+        color: #fe424d;
+        font-weight: bold;
+    }
+    
+    .btn-danger {
+        background-color: #fe424d;
+        border-color: #fe424d;
+        padding: 6px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .btn-danger:hover {
+        background-color: #e03a41;
+        border-color: #e03a41;
+    }
+</style>

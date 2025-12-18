@@ -36,13 +36,46 @@ app.get("/home",(req,res)=>{
     res.render("./allEjs/home.ejs");
 })
 
+app.get("/about",(req,res)=>{
+    res.render("./allEjs/about.ejs");
+})
 
+app.get("/restaurants",async(req,res)=>{
+    const allrestaurants=await Resturants.find({});
+    res.render("./allEjs/resShow.ejs",{allrestaurants});
+})
+
+app.get("/service",(req,res)=>{
+    res.render("./allEjs/service.ejs");
+})
+
+app.get("/gallery",(req,res)=>{
+    res.render("./allEjs/gallery.ejs");
+})
+
+app.get("/contact",(req,res)=>{
+    res.render("./allEjs/contact.ejs");
+})
+
+app.get("/login",(req,res)=>{
+    res.render("./allEjs/login.ejs");
+})
+
+app.get("/signup",(req,res)=>{
+    res.render("./allEjs/signup.ejs");
+})
+
+app.get("/feedback",(req,res)=>{
+    res.render("./allEjs/feedback.ejs");
+})
+
+// Legacy routes (keeping for backward compatibility)
 app.get("/home/lists",(req,res)=>{
-    res.render("./allEjs/resShow.ejs");
+    res.redirect("/restaurants");
 })
 
 app.get("/home/about/service",(req,res)=>{
-    res.render("./allEjs/show.ejs");
+    res.redirect("/service");
 })
 
 app.get("/home/menu",async(req,res)=>{
@@ -60,14 +93,6 @@ app.get("/home/menu:id",async (req,res)=>{
 
 app.get("/home/about/gallery/families/:id/login",(req,res)=>{
     res.render("./allEjs/login.ejs");
-})
-
-app.get("/feedback",(req,res)=>{
-    res.render("./allEjs/feedback.ejs");
-})
-
-app.get("/signup",(req,res)=>{
-    res.render("./allEjs/signup.ejs");
 })
     
 

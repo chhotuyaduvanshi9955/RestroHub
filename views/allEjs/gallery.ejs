@@ -1,15 +1,535 @@
-<% layout("/layouts/boilerplate")%>
+<%layout("/layouts/boilerplate") %>
 
-<body>
-    <h1>Gallery Page</h1>
+<style>
+    .gallery-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin: -20px -15px 40px -15px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .gallery-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='100' height='100' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 100 0 L 0 0 0 100' fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)' /%3E%3C/svg%3E");
+    }
+
+    .gallery-hero h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .gallery-hero p {
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .gallery-content {
+        padding: 60px 20px;
+        background: white;
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        aspect-ratio: 4/3;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .gallery-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover .gallery-image img {
+        transform: scale(1.12) rotate(2deg);
+    }
+
+    .gallery-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        color: white;
+        padding: 30px 20px 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+        transform: translateY(0);
+    }
+
+    .gallery-overlay h4 {
+        margin: 0 0 5px 0;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .gallery-overlay p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+        .gallery-hero h1 {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+<div class="gallery-hero">
+    <h1>🍽️ Food Gallery</h1>
+    <p>Explore culinary delights from our featured restaurants</p>
+</div>
+
+<div class="gallery-content">
+    <div class="container">
+        <div class="row mt-5 g-4">
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561e1a?w=500&h=375&fit=crop&q=80" alt="Fine Dining">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Fine Dining</h4>
+                        <p>Premium Cuisine Experience</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1594999166181-38b46ae2c22d?w=500&h=375&fit=crop&q=80" alt="Indian Cuisine">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Indian Delights</h4>
+                        <p>Authentic Traditional Food</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&h=375&fit=crop&q=80" alt="Biryani">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Biryani Special</h4>
+                        <p>Royal Rice Dish</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=375&fit=crop&q=80" alt="Healthy Meals">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Healthy Meals</h4>
+                        <p>Nutritious Options</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1585238341710-4b51926bccb1?w=500&h=375&fit=crop&q=80" alt="Italian Food">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Italian Pasta</h4>
+                        <p>Fresh & Authentic</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1608270861620-7298c3eb4752?w=500&h=375&fit=crop&q=80" alt="Fast Food">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Quick Bites</h4>
+                        <p>Fast & Delicious</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a104?w=500&h=375&fit=crop&q=80" alt="Restaurant Interior">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Ambiance</h4>
+                        <p>Cozy Dining Space</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1486299967070-08de92fe8330?w=500&h=375&fit=crop&q=80" alt="Chinese Food">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Asian Cuisine</h4>
+                        <p>Fusion Flavors</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=500&h=375&fit=crop&q=80" alt="Desserts">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Desserts</h4>
+                        <p>Sweet Delights</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500&h=375&fit=crop&q=80" alt="Beverages">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Beverages</h4>
+                        <p>Refreshing Drinks</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=375&fit=crop&q=80" alt="Salads">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Salads</h4>
+                        <p>Fresh & Healthy</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1585465346881-b72b27e84530?w=500&h=375&fit=crop&q=80" alt="Special Dishes">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Chef's Special</h4>
+                        <p>Signature Creations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1594999166181-38b46ae2c22d?w=400&h=300&fit=crop" alt="Indian Cuisine">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Indian Cuisine</h4>
+                        <p>Authentic Flavors</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop" alt="Biryani">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Biryani</h4>
+                        <p>Signature Dishes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop" alt="Healthy Meals">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Healthy Meals</h4>
+                        <p>Nutritious Options</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1585238341710-4b51926bccb1?w=400&h=300&fit=crop" alt="Italian Food">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Italian Food</h4>
+                        <p>Pasta & Pizza</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1608270861620-7298c3eb4752?w=400&h=300&fit=crop" alt="Fast Food">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Fast Food</h4>
+                        <p>Quick Bites</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561e1a?w=400&h=300&fit=crop" alt="Restaurant Interior">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Ambiance</h4>
+                        <p>Comfortable Setting</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1486299967070-08de92fe8330?w=400&h=300&fit=crop" alt="Chinese Food">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Chinese Food</h4>
+                        <p>Asian Delights</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400&h=300&fit=crop" alt="Desserts">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Desserts</h4>
+                        <p>Sweet Treats</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop" alt="Beverages">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Beverages</h4>
+                        <p>Refreshments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop" alt="Salads">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Salads</h4>
+                        <p>Fresh & Healthy</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        <img src="https://images.unsplash.com/photo-1585465346881-b72b27e84530?w=400&h=300&fit=crop" alt="Special Dishes">
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4>Specials</h4>
+                        <p>Chef's Recommendations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .gallery-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin: -20px -15px 40px -15px;
+    }
     
+    .gallery-hero h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
     
-  
-  <input type="file" id="fileInput">
-  <label class="input-group-text" for="fileInput">Upload</label> 
+    .gallery-content {
+        padding: 20px 0;
+    }
+    
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        aspect-ratio: 4/3;
+        cursor: pointer;
+    }
+    
+    .gallery-image {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .gallery-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover .gallery-image img {
+        transform: scale(1.1);
+    }
+    
+    .gallery-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover .gallery-overlay {
+        transform: translateY(0);
+    }
+    
+    .gallery-overlay h4 {
+        margin: 0 0 5px 0;
+        font-weight: bold;
+    }
+    
+    .gallery-overlay p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+</style>
 
-
-    <p>This is Gallery page of our village website.</p>
+<style>
+    .gallery-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin: -20px -15px 40px -15px;
+    }
+    
+    .gallery-hero h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .gallery-content {
+        padding: 20px 0;
+    }
+    
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        aspect-ratio: 4/3;
+        cursor: pointer;
+    }
+    
+    .gallery-image {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .gallery-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover .gallery-image img {
+        transform: scale(1.1);
+    }
+    
+    .gallery-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover .gallery-overlay {
+        transform: translateY(0);
+    }
+    
+    .gallery-overlay h4 {
+        margin: 0 0 5px 0;
+        font-weight: bold;
+    }
+    
+    .gallery-overlay p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+</style>
     <ul>
     <li>Important place : </li>
     <li> Events: </li>

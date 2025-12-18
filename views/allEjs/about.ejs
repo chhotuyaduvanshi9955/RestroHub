@@ -1,13 +1,110 @@
-<%layout("/layouts/boilerplate") %>  <!--used for ejsmate template -->    
+<%layout("/layouts/boilerplate") %>
 
-<body>
-    <h1>About Page</h1>
-    <p>This is about page of our  website.</p>
-    <ul>
-    <li>History of the resturants : </li>
-    <li>Geography : </li>
-    <li>Culture & Festivals :</li>
-    <li>Famous People from resturants :</li>
-    <li>Special guests</li>
-</ul>
-</body>
+<div class="about-section">
+    <div class="about-hero">
+        <h1>About Us</h1>
+        <p class="lead">Discover amazing restaurants and dining experiences</p>
+    </div>
+
+    <div class="about-content">
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h2>Our Mission</h2>
+                <p>We are dedicated to helping food enthusiasts discover the best dining establishments in their area. Our platform connects diners with amazing restaurants and helps them make informed decisions about where to eat.</p>
+                <p>Whether you're looking for a casual café, a fine dining restaurant, or something in between, we've got you covered with comprehensive information and ratings.</p>
+            </div>
+            <div class="col-md-6">
+                <h2>Why Choose Us?</h2>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check-circle"></i> Verified Restaurant Information</li>
+                    <li><i class="fas fa-check-circle"></i> Authentic Customer Reviews</li>
+                    <li><i class="fas fa-check-circle"></i> Real-time Availability</li>
+                    <li><i class="fas fa-check-circle"></i> Best Ratings & Recommendations</li>
+                    <li><i class="fas fa-check-circle"></i> Easy Booking System</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-utensils fa-3x mb-3"></i>
+                        <h5 class="card-title">Quality Dining</h5>
+                        <p class="card-text">Access to premium restaurants and dining experiences</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-star fa-3x mb-3"></i>
+                        <h5 class="card-title">Expert Reviews</h5>
+                        <p class="card-text">Professional ratings and honest customer feedback</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-map-location-dot fa-3x mb-3"></i>
+                        <h5 class="card-title">Find Nearby</h5>
+                        <p class="card-text">Discover restaurants near you instantly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin: -20px -15px 40px -15px;
+    }
+    
+    .about-hero h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .about-content {
+        padding: 20px 0;
+    }
+    
+    .about-content h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    
+    .about-content ul li {
+        padding: 10px 0;
+        font-size: 1.1rem;
+        color: #555;
+    }
+    
+    .about-content ul li i {
+        color: #fe424d;
+        margin-right: 10px;
+    }
+    
+    .card {
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .card i {
+        color: #fe424d;
+    }
+</style>

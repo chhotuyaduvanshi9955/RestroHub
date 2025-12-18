@@ -1,0 +1,195 @@
+<%layout("/layouts/boilerplate") %>
+
+<div class="contact-section">
+    <div class="contact-hero">
+        <h1>Contact Us</h1>
+        <p class="lead">We'd love to hear from you. Get in touch with us today!</p>
+    </div>
+
+    <div class="contact-content">
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4">
+                <div class="contact-form">
+                    <h3>Send us a Message</h3>
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" rows="5" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Send Message</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-location-dot"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h5>Address</h5>
+                            <p>123 Food Street<br>Restaurant City, RC 12345</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h5>Phone</h5>
+                            <p>+1 (555) 123-4567<br>+1 (555) 987-6543</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h5>Email</h5>
+                            <p>info@restaurants.com<br>support@restaurants.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h5>Business Hours</h5>
+                            <p>Monday - Friday: 9AM - 6PM<br>Saturday - Sunday: 10AM - 4PM</p>
+                        </div>
+                    </div>
+
+                    <div class="social-links mt-4">
+                        <h5>Follow Us</h5>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .contact-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin: -20px -15px 40px -15px;
+    }
+    
+    .contact-hero h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .contact-content {
+        padding: 20px 0;
+    }
+    
+    .contact-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .contact-form h3 {
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    
+    .contact-info {
+        padding: 20px 0;
+    }
+    
+    .contact-info h3 {
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+    
+    .contact-item {
+        display: flex;
+        margin-bottom: 30px;
+        align-items: flex-start;
+    }
+    
+    .contact-icon {
+        font-size: 2rem;
+        color: #fe424d;
+        margin-right: 20px;
+        flex-shrink: 0;
+    }
+    
+    .contact-details h5 {
+        color: #333;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    .contact-details p {
+        color: #666;
+        margin: 0;
+        line-height: 1.6;
+    }
+    
+    .social-links a {
+        display: inline-block;
+        width: 45px;
+        height: 45px;
+        background: #fe424d;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 45px;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .social-links a:hover {
+        background: #333;
+        transform: translateY(-5px);
+    }
+    
+    .form-control:focus {
+        border-color: #fe424d;
+        box-shadow: 0 0 0 0.2rem rgba(254, 66, 77, 0.25);
+    }
+    
+    .btn-danger {
+        background-color: #fe424d;
+        border-color: #fe424d;
+        padding: 10px 30px;
+        font-weight: bold;
+    }
+    
+    .btn-danger:hover {
+        background-color: #e03a41;
+        border-color: #e03a41;
+    }
+</style>
