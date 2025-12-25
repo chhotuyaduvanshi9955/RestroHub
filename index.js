@@ -10,7 +10,7 @@ const session=require("express-session");
 const Resturants=require("./modals/resturants");
 const User=require("./modals/user");
 const Booking=require("./modals/booking");
-const SessionSecret =process.env.SESSIONSECRET;
+// const SessionSecret =process.env.SESSIONSECRET;
 // console.log(SessionSecret);
 // const MONGO_URL='mongodb://127.0.0.1:27017/restruants';
 const MONGO_URL=process.env.MONGO_URL;
@@ -36,7 +36,7 @@ app.use(express.static("public"));
 
 // Session middleware
 app.use(session({
-    secret:SessionSecret,
+    secret:process.env.SESSIONSECRET||"chotuyaduvanshi9955@RestroHub",
     resave: false,
     saveUninitialized: false,
     cookie: { 
@@ -60,6 +60,9 @@ app.engine("ejs",ejsMate);
 
 
 //Routes
+app.get("/",(req,res)=>{
+    res.redirect("/home");
+})
 app.get("/home",(req,res)=>{
     res.render("./allEjs/home.ejs");
 })
