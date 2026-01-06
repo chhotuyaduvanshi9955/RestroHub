@@ -1,0 +1,52 @@
+<% layout('/layouts/boilerplate') %>
+
+<div class="owner-page">
+  <div class="owner-header">
+    <h2>All Owners</h2>
+    <div class="owner-actions">
+      <a href="/" class="btn btn-outline-secondary">Back to Home</a>
+    </div>
+  </div>
+
+  <div class="owner-list">
+    <% if (!owners || owners.length === 0) { %>
+      <div class="empty-state">
+        <i class="fas fa-users"></i>
+        <p>No owners found.</p>
+      </div>
+    <% } else { %>
+      <div class="owner-grid">
+        <% owners.forEach(function(owner) { %>
+          <div class="owner-card">
+            <div class="owner-card-body">
+              <h4><a href="/owners/<%= owner._id %>"><%= owner.name %></a></h4>
+              <div class="owner-meta"><%= owner.email %></div>
+              <div style="margin-top:10px; color:var(--muted);">Restaurants: <strong><%= owner.restaurants ? owner.restaurants.length : 0 %></strong></div>
+
+              <% if (owner.restaurants && owner.restaurants.length > 0) { %>
+                <ul class="owner-rest-list">
+                  <% owner.restaurants.forEach(function(r) { %>
+                    <li><a href="/restaurant-details/<%= r._id %>"><%= r.name %></a> — <small><%= r.city %></small></li>
+                  <% }) %>
+                </ul>
+              <% } %>
+
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<style>
+.owner-list { padding: 30px 0 }
+.owner-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px }
+.owner-card { background:var(--card-bg,#fff); border-radius:12px; padding:14px; box-shadow:0 8px 20px rgba(2,6,23,0.06); border:1px solid rgba(15,23,42,0.03) }
+.owner-card h4 { margin:0 0 6px 0 }
+.owner-meta { color:var(--muted,#666); font-size:0.95rem }
+.owner-rest-list { margin:10px 0 0 0; padding-left: 18px; color:#444 }
+.owner-rest-list li { margin-bottom:6px }
+.empty-state { text-align:center; padding:40px 0; color:#999 }
+.empty-state i { font-size:3rem; display:block; margin-bottom:12px }
+</style>

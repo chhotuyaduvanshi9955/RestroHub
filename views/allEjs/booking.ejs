@@ -235,7 +235,9 @@
                             <%= restaurant.city %>
                         </span>
                         <span>
-                            <i class="fas fa-utensils"></i>
+                            <span class="price-range"><span class="rupee-symbol">₹</span>
+                                <span class="price-text"><% if(restaurant.priceRange === 200) { %>200-400<% } else if(restaurant.priceRange === 400) { %>400-800<% } else if(restaurant.priceRange === 800) { %>800-1500<% } else { %>1500+<% } %></span>
+                            </span>
                             <%= restaurant.cuisine %>
                         </span>
                         <span>
@@ -244,7 +246,9 @@
                         </span>
                         <span>
                             <i class="fas fa-rupee-sign"></i>
-                            <% for(let i = 0; i < restaurant.priceRange; i++) { %>₹<% } %>
+                            <span class="price-range"><span class="rupee-symbol">₹</span>
+                                <span class="price-text"><% if(restaurant.priceRange === 200) { %>200-400<% } else if(restaurant.priceRange === 400) { %>400-800<% } else if(restaurant.priceRange === 800) { %>800-1500<% } else { %>1500+<% } %></span>
+                            </span>
                         </span>
                     </div>
                 </div>
@@ -349,7 +353,8 @@
                 <div class="summary-detail">
                     <span class="summary-label">Price Range:</span>
                     <span class="summary-value">
-                        <% for(let i = 0; i < restaurant.priceRange; i++) { %>₹<% } %>
+                        <p><b> ₹ <%=restaurant.priceRange%></b></p>
+                        <!-- <% for(let i = 0; i < restaurant.priceRange; i++) { %>₹<% } %> -->
                     </span>
                 </div>
             </div>

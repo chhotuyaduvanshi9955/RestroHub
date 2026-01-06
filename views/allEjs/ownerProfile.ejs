@@ -1,0 +1,40 @@
+<% layout('/layouts/boilerplate') %>
+
+<div class="owner-page">
+  <div class="owner-header">
+    <h2><%= owner.name %></h2>
+    <div class="owner-actions">
+      <a href="/owners" class="btn btn-outline-secondary">Back to Owners</a>
+    </div>
+  </div>
+
+  <div class="owner-details">
+    <p><strong>Email:</strong> <%= owner.email %></p>
+    <p><strong>Number of restaurants:</strong> <%= owner.restaurants ? owner.restaurants.length : 0 %></p>
+
+    <% if (owner.restaurants && owner.restaurants.length > 0) { %>
+      <h4 style="margin-top:16px">Restaurants</h4>
+      <div class="owner-grid">
+        <% owner.restaurants.forEach(function(r) { %>
+          <div class="owner-card">
+            <div class="owner-card-body">
+              <h5><a href="/restaurant-details/<%= r._id %>"><%= r.name %></a></h5>
+              <div class="owner-meta"><%= r.city %> • <%= r.cuisine || '—' %></div>
+              <p style="margin-top:8px; color:#666;"><%= r.description ? r.description.substring(0, 120) : '' %>...</p>
+              <a href="/restaurant-details/<%= r._id %>" class="btn btn-sm btn-primary mt-2">View</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p>This owner has not added any restaurants yet.</p>
+    <% } %>
+  </div>
+</div>
+
+<style>
+.owner-details { padding: 20px 0 }
+.owner-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top:12px }
+.owner-card { background:var(--card-bg,#fff); border-radius:10px; padding:12px; border:1px solid rgba(0,0,0,0.04) }
+.owner-card h5 { margin:0 }
+</style>

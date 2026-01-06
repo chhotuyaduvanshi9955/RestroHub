@@ -451,15 +451,31 @@
 
 <div class="restaurant-details-section">
     <div class="container">
+        <% if(typeof notFound !== 'undefined' && notFound) { %>
+            <div class="alert alert-warning">Restaurant not found. It might have been removed.</div>
+        <% } %>
+        <% if(typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger">An error occurred while loading restaurant details. Please try again later.</div>
+        <% } %>
         <!-- Hero Section -->
         <div class="restaurant-hero">
-            <img src="https://images.unsplash.com/photo-1585521537230-68679ca871d0?w=1200&h=400&fit=crop" alt="Restaurant">
+            <% 
+                let heroImg = '/images/navlogo.png';
+                if(restaurant && restaurant.img){
+                    if(typeof restaurant.img === 'string') heroImg = restaurant.img;
+                    else if(restaurant.img.url) heroImg = restaurant.img.url;
+                    else if(restaurant.img.path) heroImg = restaurant.img.path;
+                }
+            %>
+            <img src="<%= heroImg %>" alt="<%= restaurant ? restaurant.name : 'Restaurant' %>" loading="lazy" onerror="this.onerror=null;this.src='/images/nature.jpg';">
             <div class="restaurant-hero-overlay">
-                <h1>Taj Indian Kitchen</h1>
-                <p><i class="fas fa-map-pin"></i> New Delhi, India</p>
-                <p><i class="fas fa-phone"></i> +91-XXXX-XXXX-XX</p>
+                <h1><%= restaurant ? restaurant.name : 'Restaurant' %></h1>
+                <p><i class="fas fa-map-pin"></i> <%= restaurant ? restaurant.city : '' %></p>
+                <% if(restaurant && restaurant.address) { %>
+                    <p><i class="fas fa-location-dot"></i> <%= restaurant.address %></p>
+                <% } %>
                 <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <a href="/booking/<%= restaurantId && restaurantId._id %>" class="btn btn-primary" style="display: inline-block; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; border: none; cursor: pointer;">
+                    <a href="/booking/<%= restaurant ? restaurant._id : '' %>" class="btn btn-primary" style="display: inline-block; padding: 12px 24px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; border: none; cursor: pointer;">
                         <i class="fas fa-calendar-check"></i> Book Table
                     </a>
                 </div>
@@ -473,12 +489,12 @@
                 <div class="restaurant-info-cards">
                     <div class="info-card">
                         <i class="fas fa-star"></i>
-                        <h3>4.8</h3>
+                        <h3><%= restaurant ? (restaurant.rating ? restaurant.rating.toFixed(1) : '—') : '—' %></h3>
                         <p>Rating</p>
                     </div>
                     <div class="info-card">
                         <i class="fas fa-users"></i>
-                        <h3>2.5K+</h3>
+                        <h3 id="reviewsCount">—</h3>
                         <p>Reviews</p>
                     </div>
                     <div class="info-card">
@@ -488,7 +504,17 @@
                     </div>
                     <div class="info-card">
                         <i class="fas fa-rupee-sign"></i>
-                        <h3>₹₹₹</h3>
+                        <% if(restaurant && restaurant.priceRange) { 
+                            let prText = '₹ ' + restaurant.priceRange;
+                            if(restaurant.priceRange === 200) prText = '₹ 200-400';
+                            else if(restaurant.priceRange === 400) prText = '₹ 400-800';
+                            else if(restaurant.priceRange === 800) prText = '₹ 800-1500';
+                            else if(restaurant.priceRange >= 1500) prText = '₹ 1500+';
+                        %>
+                            <h3><%= prText %></h3>
+                        <% } else { %>
+                            <h3>—</h3>
+                        <% } %>
                         <p>Price Range</p>
                     </div>
                 </div>
@@ -496,6 +522,9 @@
                 <!-- Menu Section -->
                 <div class="menu-section">
                     <h2 class="section-title"><i class="fas fa-utensils"></i> Our Menu</h2>
+                    <% if(restaurant && restaurant.description) { %>
+                        <p style="margin-bottom:15px; color:#555"><%= restaurant.description %></p>
+                    <% } %>
                     <div class="menu-grid">
                         <div class="menu-item">
                             <div class="menu-item-name">🍛 Butter Chicken</div>
@@ -685,9 +714,12 @@
 </div>
 
 <script>
-// Review and Feedback Management
-let reviews = JSON.parse(localStorage.getItem('restaurantReviews')) || [];
-let feedbacks = JSON.parse(localStorage.getItem('restaurantFeedbacks')) || [];
+// Review and Feedback Management (per-restaurant)
+const REST_ID = '<%= restaurant ? restaurant._id : '' %>';
+const REVIEWS_KEY = 'restaurantReviews_' + REST_ID;
+const FEEDBACKS_KEY = 'restaurantFeedbacks_' + REST_ID;
+let reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY)) || [];
+let feedbacks = JSON.parse(localStorage.getItem(FEEDBACKS_KEY)) || [];
 
 // Set star rating
 function setRating(rating) {
@@ -730,7 +762,7 @@ function submitReview() {
     };
 
     reviews.push(review);
-    localStorage.setItem('restaurantReviews', JSON.stringify(reviews));
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
 
     // Clear form
     document.getElementById('selectedRating').value = '0';
@@ -760,7 +792,7 @@ function submitFeedback() {
     };
 
     feedbacks.push(feedback);
-    localStorage.setItem('restaurantFeedbacks', JSON.stringify(feedbacks));
+    localStorage.setItem(FEEDBACKS_KEY, JSON.stringify(feedbacks));
 
     // Clear form
     document.getElementById('feedbackType').value = 'suggestion';
@@ -772,6 +804,16 @@ function submitFeedback() {
 // Update reviews display
 function updateReviewsDisplay() {
     const reviewsList = document.getElementById('reviewsList');
+
+    // Update reviews count badge
+    const reviewsCountEl = document.getElementById('reviewsCount');
+    if(reviewsCountEl) reviewsCountEl.innerText = reviews.length ? reviews.length : '—';
+
+    // Update rating number display (if available from server, it's static otherwise)
+    const ratingNumberEl = document.querySelector('.stat-box .rating-number');
+    if(ratingNumberEl && '<%= restaurant && restaurant.rating ? restaurant.rating.toFixed(1) : '' %>') {
+        ratingNumberEl.innerText = '<%= restaurant && restaurant.rating ? restaurant.rating.toFixed(1) : '' %>';
+    }
 
     if (reviews.length === 0) {
         reviewsList.innerHTML = `
@@ -847,14 +889,18 @@ document.addEventListener('DOMContentLoaded', function() {
     updateReviewsDisplay();
     updateOrderSummary();
 
-    // Listen for cart updates
+    // Listen for cart and review/feedback updates in other tabs
     window.addEventListener('storage', function(e) {
         if (e.key === 'userCart') {
             updateOrderSummary();
         }
-        if (e.key === 'restaurantReviews') {
-            reviews = JSON.parse(localStorage.getItem('restaurantReviews')) || [];
+        if (e.key && e.key.startsWith('restaurantReviews_')) {
+            // If reviews for this restaurant changed elsewhere
+            reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY)) || [];
             updateReviewsDisplay();
+        }
+        if (e.key && e.key.startsWith('restaurantFeedbacks_')) {
+            feedbacks = JSON.parse(localStorage.getItem(FEEDBACKS_KEY)) || [];
         }
     });
 });

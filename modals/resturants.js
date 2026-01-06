@@ -4,33 +4,45 @@ const Schema=mongoose.Schema;
 const resturantsSchema=new Schema({
     name:{
         type:String,
+        required:true,
         
     },
     city:{
         type:String,
+        required:true,
        
     },
     cuisine:{
         type:String,
-        // required:true,
+        required:true,
     },
     rating:{
         type:Number,
-        // required:true,
+         required:true,
+         default:1,
     },
     priceRange:{
         type:Number,
+        required:true,
+        default:0
+    },
+    // Whether the restaurant is currently open
+    isOpen: {
+        type: Boolean,
+        default: true
     },
     address:{
-        type:String
+        type:String,
+        required:true,
     },
     description:{
-        type:String
+        type:String,
+        required:true,
     },
     img:{
-        type:Object,
-        default:"/public/images/navlogo.png", 
-        set: (v) => v === "" ? "/public/images/navlogo.png" : v,
+        type: String,
+        default: "/images/nature.jpg",
+        set: (v) => (v && typeof v === 'string' && v.trim() ? v : "/images/nature.jpg"),
         // required:true,
     },
 });

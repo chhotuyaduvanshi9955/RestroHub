@@ -9,6 +9,7 @@ const mongoose=require("mongoose");
 const session=require("express-session");
 const Resturants=require("./modals/resturants");
 const User=require("./modals/user");
+const Owner = require("./modals/owner");
 const Booking=require("./modals/booking");
 // const SessionSecret =process.env.SESSIONSECRET;
 // console.log(SessionSecret);
@@ -49,6 +50,7 @@ app.use(session({
 // Middleware to pass user data to all templates
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
+    res.locals.owner = req.session.owner || null;
     next();
 });
 
@@ -125,10 +127,16 @@ app.get("/settings",(req,res)=>{
 })
 
 app.get("/restaurant-details/:id",(req,res)=>{
-    // For now, render with restaurant ID that can be used to fetch details
-    res.render("./allEjs/restaurantDetails.ejs", {
-        restaurantId: req.params.id,
-        user: req.session.user || null
+    // Fetch restaurant by ID and render details page
+    const id = req.params.id;
+    Resturants.findById(id).then(restaurant => {
+        if(!restaurant) {
+            return res.status(404).render("./allEjs/restaurantDetails.ejs", { restaurant: null, user: req.session.user || null, notFound: true });
+        }
+        res.render("./allEjs/restaurantDetails.ejs", { restaurant, user: req.session.user || null });
+    }).catch(err => {
+        console.error('Error fetching restaurant details:', err);
+        res.status(500).render("./allEjs/restaurantDetails.ejs", { restaurant: null, user: req.session.user || null, error: true });
     });
 })
 
@@ -265,6 +273,166 @@ app.get("/logout",(req,res)=>{
     });
 })
 
+// ---------- Owner (restaurant owner) routes ----------
+function ensureOwner(req, res, next) {
+    if (req.session && req.session.owner) return next();
+    return res.redirect('/owner/login');
+}
+
+app.get('/owner/signup', (req, res) => {
+    res.render('./allEjs/ownerSignup.ejs');
+});
+
+app.post('/owner/signup', async (req, res) => {
+    try {
+        const { name, email, password, confirmPassword } = req.body;
+        if(!name || !email || !password || !confirmPassword) {
+            return res.render('./allEjs/ownerSignup.ejs', { message: 'All fields are required', error: true });
+        }
+        if(password !== confirmPassword) {
+            return res.render('./allEjs/ownerSignup.ejs', { message: 'Passwords do not match', error: true });
+        }
+        const existing = await Owner.findOne({ email });
+        if(existing) return res.render('./allEjs/ownerSignup.ejs', { message: 'Email already registered', error: true });
+
+        const owner = new Owner({ name, email, password });
+        await owner.save();
+        req.session.owner = { id: owner._id, name: owner.name, email: owner.email };
+        res.redirect('/owner/dashboard');
+    } catch(err) {
+        console.error('Owner signup error:', err);
+        res.render('./allEjs/ownerSignup.ejs', { message: 'An error occurred', error: true });
+    }
+});
+
+app.get('/owner/login', (req, res) => {
+    res.render('./allEjs/ownerLogin.ejs');
+});
+
+app.post('/owner/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if(!email || !password) return res.render('./allEjs/ownerLogin.ejs', { message: 'Provide email and password', error: true });
+        const owner = await Owner.findOne({ email });
+        if(!owner) return res.render('./allEjs/ownerLogin.ejs', { message: 'Owner not found', error: true });
+        const match = await owner.comparePassword(password);
+        if(!match) return res.render('./allEjs/ownerLogin.ejs', { message: 'Invalid credentials', error: true });
+        req.session.owner = { id: owner._id, name: owner.name, email: owner.email };
+        res.redirect('/owner/dashboard');
+    } catch(err) {
+        console.error('Owner login error:', err);
+        res.render('./allEjs/ownerLogin.ejs', { message: 'An error occurred', error: true });
+    }
+});
+
+app.get('/owner/logout', (req, res) => {
+    if(req.session) {
+        req.session.owner = null;
+    }
+    res.redirect('/home');
+});
+
+// Public page: list all owners and their restaurants
+app.get('/owners', async (req, res) => {
+    try {
+        const owners = await Owner.find().populate('restaurants');
+        res.render('./allEjs/ownersList.ejs', { owners });
+    } catch (err) {
+        console.error('Error fetching owners:', err);
+        res.status(500).send('Unable to load owners');
+    }
+});
+
+// Public owner detail page
+app.get('/owners/:id', async (req, res) => {
+    try {
+        const owner = await Owner.findById(req.params.id).populate('restaurants');
+        if (!owner) return res.status(404).send('Owner not found');
+        res.render('./allEjs/ownerProfile.ejs', { owner });
+    } catch (err) {
+        console.error('Error fetching owner profile:', err);
+        res.status(500).send('Unable to load owner profile');
+    }
+});
+
+// Toggle restaurant open/closed status (owner only)
+app.post('/owner/restaurant/:id/toggle-status', ensureOwner, async (req, res) => {
+    try {
+        const restId = req.params.id;
+        const ownerId = req.session.owner.id;
+
+        // Verify owner owns this restaurant
+        const owner = await Owner.findById(ownerId);
+        if (!owner) return res.status(403).json({ success: false, message: 'Owner not found' });
+
+        const owns = (owner.restaurants || []).some(r => String(r) === String(restId));
+        if (!owns) return res.status(403).json({ success: false, message: 'Not authorized' });
+
+        const rest = await Resturants.findById(restId);
+        if (!rest) return res.status(404).json({ success: false, message: 'Restaurant not found' });
+
+        rest.isOpen = !rest.isOpen;
+        await rest.save();
+
+        return res.json({ success: true, isOpen: rest.isOpen });
+    } catch (err) {
+        console.error('Toggle status error:', err);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+app.get('/owner/dashboard', ensureOwner, async (req, res) => {
+    const owner = await Owner.findById(req.session.owner.id).populate('restaurants');
+    const message = req.session.ownerMsg || null;
+    // clear message after reading
+    req.session.ownerMsg = null;
+    res.render('./allEjs/ownerDashboard.ejs', { owner, message });
+});
+
+app.get('/owner/add-restaurant', ensureOwner, (req, res) => {
+    res.render('./allEjs/ownerAddRestaurant.ejs', { message: null });
+});
+
+app.post('/owner/add-restaurant', ensureOwner, async (req, res) => {
+    try {
+        let { name, city, cuisine, rating, priceRange, address, description, img } = req.body;
+
+        // Normalize and validate inputs
+        name = (name || '').trim();
+        city = (city || '').trim();
+        cuisine = (cuisine || '').trim();
+        address = (address || '').trim();
+        description = (description || '').trim();
+
+        // Coerce numeric fields (priceRange now stores starting price, e.g., 200)
+        rating = parseFloat(rating) || 4.5;
+        priceRange = parseInt(priceRange) || 200;
+
+        // Normalize image URL so public assets resolve correctly
+        let imgUrl = (img || '').trim();
+        if(!imgUrl) {
+            imgUrl = '/images/nature.jpg'; // default placeholder
+        } else {
+            // If user supplied a path that includes 'public/' (e.g. '/public/images/foo.png')
+            // convert it to the URL path served by express.static (e.g. '/images/foo.png')
+            if(imgUrl.startsWith('/public/')) imgUrl = imgUrl.replace('/public/', '/');
+            if(imgUrl.startsWith('public/')) imgUrl = '/' + imgUrl.replace(/^public\//, '');
+            if(imgUrl.startsWith('images/')) imgUrl = '/' + imgUrl; // ensure leading slash
+        }
+
+        const newRest = new Resturants({ name, city, cuisine, rating, priceRange, address, description, img: imgUrl });
+        const saved = await newRest.save();
+        await Owner.findByIdAndUpdate(req.session.owner.id, { $push: { restaurants: saved._id } });
+
+        // Set a short-lived message and redirect to dashboard so owner sees the newly added restaurant
+        req.session.ownerMsg = 'Restaurant added successfully!';
+        return res.redirect('/owner/dashboard');
+    } catch(err) {
+        console.error('Add restaurant error:', err);
+        res.render('./allEjs/ownerAddRestaurant.ejs', { message: 'An error occurred', error: true });
+    }
+});
+
 // API Routes for Search
 app.get("/api/search",async(req,res)=>{
     try{
@@ -362,9 +530,14 @@ app.get("/api/restaurants", async(req,res)=>{
         }
         
         if(maxPrice) {
-            filter.priceRange = { $lte: parseFloat(maxPrice) };
+            // We'll handle maxPrice via aggregation so that we can normalize
+            // old tier-based values (1..4) to their starting prices
+            // (1->200, 2->400, 3->800, 4->1500) when comparing.
+            // This ensures older DB records still filter correctly.
+            // Leave filter unchanged here and apply the normalized comparison
+            // later using an aggregation pipeline.
         }
-        
+
         if(search) {
             filter.$or = [
                 { name: { $regex: search, $options: 'i' } },
@@ -373,8 +546,43 @@ app.get("/api/restaurants", async(req,res)=>{
                 { address: { $regex: search, $options: 'i' } }
             ];
         }
+        let restaurants;
+        if (maxPrice) {
+            const max = parseFloat(maxPrice);
+            if (isNaN(max)) {
+                return res.status(400).json({ success: false, message: 'Invalid maxPrice', data: [] });
+            }
 
-        const restaurants = await Resturants.find(filter);
+            // Build aggregation pipeline: first match other filters, then add
+            // a normalizedPrice field which maps old tiers (<=4) to their
+            // starting prices, otherwise uses the stored priceRange as-is.
+            const pipeline = [];
+            if (Object.keys(filter).length) pipeline.push({ $match: filter });
+
+            pipeline.push({
+                $addFields: {
+                    normalizedPrice: {
+                        $switch: {
+                            branches: [
+                                {
+                                    case: { $lte: ["$priceRange", 4] },
+                                    then: {
+                                        $arrayElemAt: [ [200, 400, 800, 1500], { $subtract: ["$priceRange", 1] } ]
+                                    }
+                                }
+                            ],
+                            default: "$priceRange"
+                        }
+                    }
+                }
+            });
+
+            pipeline.push({ $match: { normalizedPrice: { $lte: max } } });
+
+            restaurants = await Resturants.aggregate(pipeline);
+        } else {
+            restaurants = await Resturants.find(filter);
+        }
         
         res.json({
             success: true,

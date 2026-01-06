@@ -15,11 +15,11 @@
         position: relative;
         overflow: hidden;
         margin: -20px -15px 0 -15px;
-        min-height: 550px;
+        min-height: 450px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-attachment: fixed;
+        background-attachment: scroll; /* fixed causes issues on some mobile browsers */
     }
 
     .hero-section::before {
@@ -216,7 +216,7 @@
     }
 
     .hackathon-image::before {
-        content: '🏆';
+        /* content: '🏆'; */
         position: absolute;
         top: -20px;
         right: -20px;
@@ -504,7 +504,7 @@
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="hero-content">
-            <h1>Welcome to RestroHub</h1>
+            <h1>Welcome to Tastifyr</h1>
             <p class="tagline">Discover the Best Restaurants Near You</p>
             <div class="hero-buttons">
                 <a href="/restaurants" class="btn btn-danger">
@@ -512,6 +512,9 @@
                 </a>
                 <a href="/contact" class="btn btn-light">
                     <i class="fas fa-envelope"></i> Get in Touch
+                </a>
+                <a href="/owner/signup" class="btn btn-outline-light" style="border:2px solid rgba(255,255,255,0.18);">
+                    <i class="fas fa-user-tie"></i> I'm an owner
                 </a>
             </div>
         </div>
@@ -530,7 +533,7 @@
             
             <div class="hackathon-container">
                 <div class="hackathon-image">
-                    <img src="/images/navlogo.png" alt="Hackathon Winning Project" onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?w=450&h=450&fit=crop'">
+                    <img src="/images/navlogo.png" alt="loading..." onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?w=450&h=450&fit=crop'">
                 </div>
                 
                 <div class="hackathon-text">
@@ -554,7 +557,7 @@
 
     <!-- Features Section -->
     <div class="container features-section">
-        <h2>Why Choose RestroHub?</h2>
+        <h2>Why Choose Tastifyr?</h2>
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="feature-card">

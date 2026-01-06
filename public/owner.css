@@ -1,0 +1,49 @@
+/* Owner pages: professional, clean, responsive styles */
+:root{
+  --primary: #667eea;
+  --accent: #fe424d;
+  --muted:#6b7280;
+  --card-bg: #ffffff;
+  --glass: rgba(255,255,255,0.7);
+}
+
+.owner-page{padding:60px 15px 100px 15px;font-family:'Plus Jakarta Sans',Montserrat,system-ui,Segoe UI,Arial,sans-serif;color:#111}
+
+/* Auth pages */
+.owner-page.auth-page{display:flex;align-items:center;justify-content:center;min-height:60vh}
+.owner-auth-card{width:100%;max-width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(249,250,251,0.95));border-radius:14px;padding:32px 28px;box-shadow:0 8px 30px rgba(16,24,40,0.08);border:1px solid rgba(99,102,241,0.06)}
+.owner-title{font-size:1.75rem;margin-bottom:8px;font-weight:700;color:#0f172a}
+.owner-sub{color:var(--muted);margin-bottom:20px}
+.owner-auth-card .form-label{font-weight:600;color:#111}
+.owner-auth-card .form-control{border-radius:8px;padding:12px}
+.owner-auth-card .btn{border-radius:10px;padding:10px 18px}
+.owner-auth-card .btn-primary{background:linear-gradient(135deg,var(--primary),#764ba2);border:0}
+.owner-auth-card .small-link{color:var(--primary);font-weight:600}
+
+/* Dashboard */
+.owner-page.dashboard{padding-top:40px}
+.owner-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}
+.owner-header h2{font-size:1.6rem;margin:0}
+.owner-actions .btn{border-radius:10px}
+
+.owner-restaurants{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.owner-restaurant-card{background:var(--card-bg);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,6,23,0.06);border:1px solid rgba(15,23,42,0.03);min-height:220px;display:flex;flex-direction:column}
+.owner-restaurant-card img{width:100%;height:160px;object-fit:cover}
+.owner-restaurant-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.owner-restaurant-body h5{margin:0;font-size:1.05rem}
+.owner-restaurant-meta{color:var(--muted);font-size:0.95rem}
+
+/* Add restaurant form */
+.owner-form-card{background:linear-gradient(180deg, #fff, #9494d6);padding:28px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.06);border:1px solid rgba(99,102,241,0.06)}
+.owner-form-card .form-control{border-radius:8px;padding:12px}
+.owner-form-card .btn-success{background:linear-gradient(135deg,#10b981,#059669);border:0}
+
+/* Alerts */
+.alert{border-radius:10px}
+
+/* Responsive */
+@media (max-width:768px){
+  .owner-page{padding:30px 12px}
+  .owner-auth-card{padding:24px}
+  .owner-header{flex-direction:column;align-items:flex-start;gap:8px}
+}

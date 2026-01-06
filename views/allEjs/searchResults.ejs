@@ -301,7 +301,14 @@
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="restaurant-card">
                         <div class="restaurant-image">
-                            <img src="<%= r.img %>" alt="<%= r.name %>">
+                            <% let rImg = '/images/nature.jpg';
+                               if(r && r.img){
+                                   if(typeof r.img === 'string') rImg = r.img;
+                                   else if(r.img.url) rImg = r.img.url;
+                                   else if(r.img.path) rImg = r.img.path;
+                               }
+                            %>
+                            <img src="<%= rImg %>" alt="<%= r.name %>">
                             <div class="rating-badge">
                                 <i class="fas fa-star"></i> <%= r.rating %>
                             </div>
@@ -315,9 +322,9 @@
                             </div>
                             <div class="restaurant-footer">
                                 <span class="price-range">
-                                    <% for(let i = 0; i < r.priceRange; i++) { %>₹<% } %>
-                                    <span style="margin-left: 8px; font-weight: 500; color: #666;">
-                                        <% if(r.priceRange === 1) { %>₹200-400<% } else if(r.priceRange === 2) { %>₹400-800<% } else if(r.priceRange === 3) { %>₹800-1500<% } else { %>₹1500+<% } %>
+                                    <span class="rupee-symbol">₹</span>
+                                    <span class="price-text" style="margin-left:8px; font-weight:500; color:#666;">
+                                        <% if(r.priceRange === 200) { %>200-400<% } else if(r.priceRange === 400) { %>400-800<% } else if(r.priceRange === 800) { %>800-1500<% } else { %>1500+<% } %>
                                     </span>
                                 </span>
                                 <a href="/restaurant/<%= r._id %>" class="btn btn-danger">View Details</a>

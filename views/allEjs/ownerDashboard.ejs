@@ -1,0 +1,47 @@
+<%layout('/layouts/boilerplate')%>
+
+<div class="owner-page dashboard">
+  <div class="owner-header">
+    <h2>Welcome, <%= owner.name %></h2>
+    <div class="owner-actions">
+      <a href="/owner/add-restaurant" class="btn btn-success me-2">Add Restaurant</a>
+      <a href="/owners/<%= owner._id %>" class="btn btn-outline-primary me-2">View Public Profile</a>
+      <a href="/owner/logout" class="btn btn-outline-secondary">Logout</a>
+    </div>
+  </div>
+
+  <% if(typeof message !== 'undefined' && message) { %>
+    <div class="mt-3">
+      <div class="alert alert-success"><%= message %></div>
+    </div>
+  <% } %>
+
+  <h4 style="margin-bottom:14px">Your Restaurants</h4>
+  <% if(!owner.restaurants || owner.restaurants.length === 0) { %>
+    <div class="alert alert-info">No restaurants yet. Click "Add Restaurant" to create one.</div>
+  <% } else { %>
+    <div class="owner-restaurants">
+      <% owner.restaurants.forEach(function(r) { %>
+        <div class="owner-restaurant-card">
+          <% if (r.img && typeof r.img === 'string') { %>
+            <img src="<%= r.img %>" alt="<%= r.name %>">
+          <% } else if(r.img && r.img.url){ %>
+            <img src="<%= r.img.url %>" alt="<%= r.name %>">
+          <% } else { %>
+            <img src="<%= r.img && r.img.path ? r.img.path : '/images/navlogo.png' %>" alt="<%= r.name %>">
+          <% } %>
+          <div class="owner-restaurant-body">
+            <div>
+              <h5><%= r.name %> <small style="margin-left:8px; font-weight:600; color:#666;">• <span class="owner-status"><%= r.isOpen ? 'Open' : 'Closed' %></span></small></h5>
+              <div class="owner-restaurant-meta"><%= r.city %> • <%= r.cuisine || '—' %></div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <a href="/restaurant-details/<%= r._id %>" class="btn btn-outline-primary btn-sm">View</a>
+              <a href="#" class="btn btn-outline-secondary btn-sm">Edit</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>

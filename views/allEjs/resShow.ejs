@@ -33,6 +33,8 @@
                     <option value="Pune">Pune</option>
                     <option value="Kolkata">Kolkata</option>
                     <option value="Chennai">Chennai</option>
+                    <option value="Gaya">Gaya</option>
+                    <option value="Patna">Patna</option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -79,9 +81,21 @@
                                 <div class="col-lg-4 col-md-6">
                                     <div class="restaurant-card">
                                         <div class="restaurant-image">
-                                            <img src="<%= r.img %>" alt="<%= r.name %>">
+                                                            <% let rImg = '/images/nature.jpg';
+                                                               if(r && r.img){
+                                                                   if(typeof r.img === 'string') rImg = r.img;
+                                                                   else if(r.img.url) rImg = r.img.url;
+                                                                   else if(r.img.path) rImg = r.img.path;
+                                                               }
+                                                            %>
+                                                            <img src="<%= rImg %>" alt="<%= r.name %>" loading="lazy" onerror="this.onerror=null;this.src='/images/nature.jpg';">
                                             <div class="rating-badge">
                                                 <i class="fas fa-star"></i> <%= r.rating %>
+                                            </div>
+                                            <!-- Status badge -->
+                                            <div class="status-badge <%= r.isOpen ? 'open' : 'closed' %>" data-id="<%= r._id %>">
+                                                <i class="fas <%= r.isOpen ? 'fa-door-open' : 'fa-door-closed' %>"></i>
+                                                <span class="status-text"><%= r.isOpen ? 'Open' : 'Closed' %></span>
                                             </div>
                                         </div>
                                         <div class="restaurant-content">
@@ -94,14 +108,14 @@
                                             <div class="restaurant-footer">
                                                 <div class="footer-left">
                                                     <span class="price-range">
-                                                        <% for(let i = 0; i < r.priceRange; i++) { %>₹<% } %>
-                                                        <span style="margin-left: 8px; font-weight: 500; color: #666;">
-                                                            <% if(r.priceRange === 1) { %>₹200-400<% } else if(r.priceRange === 2) { %>₹400-800<% } else if(r.priceRange === 3) { %>₹800-1500<% } else { %>₹1500+<% } %>
+                                                        <span class="rupee-symbol">₹</span>
+                                                        <span class="price-text">
+                                                            <% if(r.priceRange === 200) { %>200-400<% } else if(r.priceRange === 400) { %>400-800<% } else if(r.priceRange === 800) { %>800-1500<% } else { %>1500+<% } %>
                                                         </span>
                                                     </span>
                                                 </div>
                                                 <div class="footer-right">
-                                                    <button class="btn-favorite" onclick="toggleFavorite(<%= r._id %>, '<%= r.name %>')" data-id="<%= r._id %>">
+                                                    <button class="btn-favorite" onclick="toggleFavorite('<%= r._id %>', this)" data-id="<%= r._id %>" data-name="<%- r.name.replace(/&/g,'&amp;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;') %>" aria-label="Add to favorites" title="Add to favorites">
                                                         <i class="far fa-heart"></i>
                                                     </button>
                                                     <a href="/booking/<%= r._id %>" class="btn btn-sm btn-primary" title="Book Table">
@@ -153,9 +167,21 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="restaurant-card">
                                 <div class="restaurant-image">
-                                    <img src="<%= r.img %>" alt="<%= r.name %>">
+                                    <% let rImg = '/images/nature.jpg';
+                                       if(r && r.img){
+                                           if(typeof r.img === 'string') rImg = r.img;
+                                           else if(r.img.url) rImg = r.img.url;
+                                           else if(r.img.path) rImg = r.img.path;
+                                       }
+                                    %>
+                                    <img src="<%= rImg %>" alt="<%= r.name %>" loading="lazy" onerror="this.onerror=null;this.src='/images/nature.jpg';">
                                     <div class="rating-badge">
                                         <i class="fas fa-star"></i> <%= r.rating %>
+                                    </div>
+                                    <!-- Status badge -->
+                                    <div class="status-badge <%= r.isOpen ? 'open' : 'closed' %>" data-id="<%= r._id %>">
+                                        <i class="fas <%= r.isOpen ? 'fa-door-open' : 'fa-door-closed' %>"></i>
+                                        <span class="status-text"><%= r.isOpen ? 'Open' : 'Closed' %></span>
                                     </div>
                                 </div>
                                 <div class="restaurant-content">
@@ -168,14 +194,19 @@
                                     <div class="restaurant-footer">
                                         <div class="footer-left">
                                             <span class="price-range">
-                                                <% for(let i = 0; i < r.priceRange; i++) { %>₹<% } %>
-                                                <span style="margin-left: 8px; font-weight: 500; color: #666;">
-                                                    <% if(r.priceRange === 1) { %>₹200-400<% } else if(r.priceRange === 2) { %>₹400-800<% } else if(r.priceRange === 3) { %>₹800-1500<% } else { %>₹1500+<% } %>
+                                                <span class="rupee-symbol">₹</span>
+                                                <span class="price-text">
+                                                    <% if(r.priceRange === 200) { %>200-400<% } else if(r.priceRange === 400) { %>400-800<% } else if(r.priceRange === 800) { %>800-1500<% } else { %>1500+<% } %>
                                                 </span>
                                             </span>
                                         </div>
                                         <div class="footer-right">
-                                            <button class="btn-favorite" onclick="toggleFavorite(<%= r._id %>, '<%= r.name %>')" data-id="<%= r._id %>">
+                                                    <% if (typeof owner !== 'undefined' && owner && owner.restaurants && owner.restaurants.map(function(x){return String(x)}).includes(String(r._id))) { %>
+                                                        <button class="btn btn-sm btn-outline-secondary btn-toggle-status" onclick="toggleRestaurantStatus('<%= r._id %>', this)" title="Toggle open/closed">
+                                                            <i class="fas fa-toggle-on"></i> <span class="visually-hidden">Toggle status</span>
+                                                        </button>
+                                                    <% } %>
+                                            <button class="btn-favorite" onclick="toggleFavorite('<%= r._id %>', this)" data-id="<%= r._id %>" data-name="<%- r.name.replace(/&/g,'&amp;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;') %>" aria-label="Add to favorites" title="Add to favorites">
                                                 <i class="far fa-heart"></i>
                                             </button>
                                             <a href="/booking/<%= r._id %>" class="btn btn-sm btn-primary" title="Book Table">
@@ -326,12 +357,41 @@
     }
     
     .price-range {
-        font-size: 1.1rem;
-        color: #fe424d;
-        font-weight: bold;
+        font-size: 1rem;
+        color: #333;
         display: inline-flex;
         align-items: center;
+        gap: 8px;
         white-space: nowrap;
+    }
+    .price-range .rupee-symbol {
+        color: #fe424d;
+        font-weight: 700;
+        font-size: 1.05rem;
+    }
+    .price-range .price-text {
+        color: #666;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    /* Favorite button styling */
+    .btn-favorite {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: #ddd;
+        transition: all 0.15s ease;
+        padding: 4px 6px;
+        border-radius: 6px;
+    }
+    .btn-favorite:hover {
+        color: #fe424d;
+        transform: scale(1.15);
+    }
+    .btn-favorite.active {
+        color: #fe424d;
     }
     
     .btn-danger {
@@ -396,6 +456,28 @@
         color: #fe424d;
         transform: scale(1.2);
     }
+
+    /* Status badge */
+    .status-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    }
+    .status-badge.open { background: rgba(34,197,94,0.95); }
+    .status-badge.closed { background: rgba(120,120,130,0.95); }
+    .status-badge i { font-size: 0.95rem }
+
+    .btn-toggle-status { font-size: 0.85rem; padding: 6px 8px }
 
     /* Footer Layout */
     .footer-left {
@@ -506,27 +588,77 @@ let favorites = JSON.parse(localStorage.getItem('restaurantFavorites')) || [];
 let orders = JSON.parse(localStorage.getItem('userOrders')) || [];
 
 // Toggle favorite
-function toggleFavorite(id, name) {
+function toggleFavorite(id, nameOrBtn, btn) {
     const idString = String(id);
-    const button = document.querySelector(`.btn-favorite[data-id="${idString}"]`);
+    let button;
+    let name;
+
+    // Support two calling styles:
+    // 1) toggleFavorite(id, name, btn)
+    // 2) toggleFavorite(id, button)
+    if (nameOrBtn && nameOrBtn.tagName) {
+        // second argument is the button element
+        button = nameOrBtn;
+        name = button.dataset.name || (button.closest('.restaurant-card')?.querySelector('h3')?.textContent || '');
+    } else {
+        name = nameOrBtn;
+        button = btn || document.querySelector(`.btn-favorite[data-id="${idString}"]`);
+    }
+
     const isFavorite = favorites.some(fav => String(fav.id) === idString);
-    
+
     if (isFavorite) {
         favorites = favorites.filter(fav => String(fav.id) !== idString);
         if (button) {
             button.innerHTML = '<i class="far fa-heart"></i>';
             button.classList.remove('active');
+            button.setAttribute('aria-pressed', 'false');
+            button.title = 'Add to favorites';
         }
     } else {
         favorites.push({ id: idString, name });
         if (button) {
             button.innerHTML = '<i class="fas fa-heart"></i>';
             button.classList.add('active');
+            button.setAttribute('aria-pressed', 'true');
+            button.title = 'Remove from favorites';
         }
     }
-    
+
     localStorage.setItem('restaurantFavorites', JSON.stringify(favorites));
     updateFavoritesUI();
+}
+
+// Toggle restaurant open/closed (owner-only)
+async function toggleRestaurantStatus(id, btn) {
+    const button = btn || document.querySelector(`.btn-toggle-status[data-id="${id}"]`);
+    try {
+        const res = await fetch(`/owner/restaurant/${id}/toggle-status`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        const json = await res.json();
+        if (!json.success) {
+            alert(json.message || 'Unable to change status');
+            return;
+        }
+
+        // Update badge UI
+        const badge = document.querySelector(`.status-badge[data-id="${id}"]`);
+        if (badge) {
+            badge.classList.toggle('open', json.isOpen);
+            badge.classList.toggle('closed', !json.isOpen);
+            badge.querySelector('.status-text').textContent = json.isOpen ? 'Open' : 'Closed';
+            badge.querySelector('i').classList.toggle('fa-door-open', json.isOpen);
+            badge.querySelector('i').classList.toggle('fa-door-closed', !json.isOpen);
+        }
+
+        // Small visual response on the button
+        if (button) {
+            button.classList.add('active');
+            setTimeout(() => button.classList.remove('active'), 500);
+        }
+    } catch (err) {
+        console.error('Toggle status failed', err);
+        alert('Error toggling status');
+    }
 }
 
 // Update favorites tab
@@ -549,7 +681,7 @@ function updateFavoritesUI() {
                         <h5 style="margin: 0 0 5px 0;">${fav.name}</h5>
                         <small style="color: #999;">Added to favorites</small>
                     </div>
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeFavorite(${fav.id})">
+                    <button class="btn btn-sm btn-outline-danger" onclick="removeFavorite('${fav.id}')">
                         <i class="fas fa-trash"></i> Remove
                     </button>
                 </div>
@@ -627,6 +759,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (button) {
             button.innerHTML = '<i class="fas fa-heart"></i>';
             button.classList.add('active');
+            button.setAttribute('aria-pressed', 'true');
+            button.title = 'Remove from favorites';
         }
     });
     

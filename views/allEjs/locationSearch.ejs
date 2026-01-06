@@ -714,10 +714,10 @@
                     <label for="priceFilter">Price Range</label>
                     <select id="priceFilter">
                         <option value="">All Prices</option>
-                        <option value="1">Budget (₹)</option>
-                        <option value="2">Moderate (₹₹)</option>
-                        <option value="3">Premium (₹₹₹)</option>
-                        <option value="4">Luxury (₹₹₹₹)</option>
+                        <option value="200">Budget (₹ 200-400)</option>
+                        <option value="400">Moderate (₹ 400-800)</option>
+                        <option value="800">Premium (₹ 800-1500)</option>
+                        <option value="1500">Luxury (₹ 1500+)</option>
                     </select>
                 </div>
             </form>
@@ -765,9 +765,7 @@
 
         <!-- Map Section -->
         <div class="map-container" id="mapContainer" style="display: none;">
-            <div class="map-placeholder">
-                <i class="fas fa-map"></i> Map view coming soon - View restaurants in your area
-            </div>
+            <div id="map" style="width:100%;height:420px;border-radius:10px;"></div>
         </div>
     </div>
 </div>
@@ -775,18 +773,18 @@
 <script>
     // Sample restaurant database with locations (latitude, longitude)
     const restaurantsDatabase = [
-        { id: 1, name: "Taj Indian Kitchen", cuisine: "Indian", city: "New Delhi", rating: 4.8, price: 3, emoji: "🍛", lat: 28.6139, lng: 77.2090 },
-        { id: 2, name: "Pasta Paradise", cuisine: "Italian", city: "Mumbai", rating: 4.6, price: 3, emoji: "🍝", lat: 19.0760, lng: 72.8777 },
-        { id: 3, name: "Dragon's Wok", cuisine: "Chinese", city: "Bangalore", rating: 4.5, price: 2, emoji: "🥢", lat: 12.9716, lng: 77.5946 },
-        { id: 4, name: "Sushi Haven", cuisine: "Japanese", city: "Hyderabad", rating: 4.7, price: 4, emoji: "🍣", lat: 17.3850, lng: 78.4867 },
-        { id: 5, name: "Burger Bliss", cuisine: "American", city: "Pune", rating: 4.4, price: 2, emoji: "🍔", lat: 18.5204, lng: 73.8567 },
-        { id: 6, name: "Spice Route", cuisine: "Indian", city: "Kolkata", rating: 4.9, price: 2, emoji: "🌶️", lat: 22.5726, lng: 88.3639 },
-        { id: 7, name: "Thai Street", cuisine: "Thai", city: "New Delhi", rating: 4.3, price: 2, emoji: "🥘", lat: 28.7041, lng: 77.1025 },
-        { id: 8, name: "Pizza Palace", cuisine: "Italian", city: "Bangalore", rating: 4.5, price: 2, emoji: "🍕", lat: 12.9520, lng: 77.6245 },
-        { id: 9, name: "El Mariachi", cuisine: "Mexican", city: "Mumbai", rating: 4.2, price: 2, emoji: "🌮", lat: 19.0825, lng: 72.8830 },
-        { id: 10, name: "Beijing Express", cuisine: "Chinese", city: "New Delhi", rating: 4.6, price: 2, emoji: "🥡", lat: 28.6162, lng: 77.2310 },
-        { id: 11, name: "Sakura Dreams", cuisine: "Japanese", city: "Bangalore", rating: 4.8, price: 3, emoji: "🍱", lat: 12.9352, lng: 77.6245 },
-        { id: 12, name: "Curry House", cuisine: "Indian", city: "Mumbai", rating: 4.7, price: 2, emoji: "🍛", lat: 19.1136, lng: 72.8697 },
+        { id: 1, name: "Taj Indian Kitchen", cuisine: "Indian", city: "New Delhi", rating: 4.8, price: 800, emoji: "🍛", lat: 28.6139, lng: 77.2090 },
+        { id: 2, name: "Pasta Paradise", cuisine: "Italian", city: "Mumbai", rating: 4.6, price: 800, emoji: "🍝", lat: 19.0760, lng: 72.8777 },
+        { id: 3, name: "Dragon's Wok", cuisine: "Chinese", city: "Bangalore", rating: 4.5, price: 400, emoji: "🥢", lat: 12.9716, lng: 77.5946 },
+        { id: 4, name: "Sushi Haven", cuisine: "Japanese", city: "Hyderabad", rating: 4.7, price: 1500, emoji: "🍣", lat: 17.3850, lng: 78.4867 },
+        { id: 5, name: "Burger Bliss", cuisine: "American", city: "Pune", rating: 4.4, price: 400, emoji: "🍔", lat: 18.5204, lng: 73.8567 },
+        { id: 6, name: "Spice Route", cuisine: "Indian", city: "Kolkata", rating: 4.9, price: 400, emoji: "🌶️", lat: 22.5726, lng: 88.3639 },
+        { id: 7, name: "Thai Street", cuisine: "Thai", city: "New Delhi", rating: 4.3, price: 400, emoji: "🥘", lat: 28.7041, lng: 77.1025 },
+        { id: 8, name: "Pizza Palace", cuisine: "Italian", city: "Bangalore", rating: 4.5, price: 400, emoji: "🍕", lat: 12.9520, lng: 77.6245 },
+        { id: 9, name: "El Mariachi", cuisine: "Mexican", city: "Mumbai", rating: 4.2, price: 400, emoji: "🌮", lat: 19.0825, lng: 72.8830 },
+        { id: 10, name: "Beijing Express", cuisine: "Chinese", city: "New Delhi", rating: 4.6, price: 400, emoji: "🥡", lat: 28.6162, lng: 77.2310 },
+        { id: 11, name: "Sakura Dreams", cuisine: "Japanese", city: "Bangalore", rating: 4.8, price: 800, emoji: "🍱", lat: 12.9352, lng: 77.6245 },
+        { id: 12, name: "Curry House", cuisine: "Indian", city: "Mumbai", rating: 4.7, price: 400, emoji: "🍛", lat: 19.1136, lng: 72.8697 },
     ];
 
     const cities = {
@@ -823,8 +821,28 @@
                         lng: position.coords.longitude,
                         accuracy: position.coords.accuracy
                     };
-                    showStatus(`📍 Location found! Latitude: ${currentLocation.lat.toFixed(4)}, Longitude: ${currentLocation.lng.toFixed(4)}`, 'success');
-                    searchByLocation();
+                    // Try to reverse-geocode to get a human-friendly city name
+                    reverseGeocode(currentLocation.lat, currentLocation.lng)
+                        .then(city => {
+                                            if (city) {
+                                                document.getElementById('locationInput').value = city;
+                                                try { localStorage.setItem('currentCity', city); } catch(e){}
+                                                // If navbar update helper exists on page, call it so badge updates immediately
+                                                if (window.updateNavCityDisplay) window.updateNavCityDisplay();
+                                                showStatus(`📍 Location found: ${city} (Lat: ${currentLocation.lat.toFixed(4)}, Lon: ${currentLocation.lng.toFixed(4)})`, 'success');
+                                            } else {
+                                                try { localStorage.setItem('currentCity', ''); } catch(e){}
+                                                if (window.updateNavCityDisplay) window.updateNavCityDisplay();
+                                                showStatus(`📍 Location found (Lat: ${currentLocation.lat.toFixed(4)}, Lon: ${currentLocation.lng.toFixed(4)})`, 'success');
+                                            }
+                            searchByLocation();
+                        })
+                        .catch(err => {
+                            console.error('Reverse geocode failed', err);
+                            try { localStorage.setItem('currentCity', ''); } catch(e){}
+                            showStatus(`📍 Location found (Lat: ${currentLocation.lat.toFixed(4)}, Lon: ${currentLocation.lng.toFixed(4)})`, 'success');
+                            searchByLocation();
+                        });
                     gpsBtn.disabled = false;
                     document.getElementById('loadingSpinner').classList.remove('active');
                 },
@@ -838,6 +856,24 @@
             showStatus('❌ Geolocation is not supported by your browser', 'error');
             gpsBtn.disabled = false;
             document.getElementById('loadingSpinner').classList.remove('active');
+        }
+    }
+
+    // Reverse geocode coordinates to a city name using OpenStreetMap Nominatim
+    async function reverseGeocode(lat, lng) {
+        try {
+            const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lng)}&zoom=10&addressdetails=1`;
+            const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+            if (!res.ok) throw new Error('Geocoding service error');
+            const data = await res.json();
+            if (data && data.address) {
+                // Prefer city/town/village, then county/state
+                return data.address.city || data.address.town || data.address.village || data.address.county || data.address.state || null;
+            }
+            return null;
+        } catch (err) {
+            console.error('reverseGeocode error', err);
+            return null;
         }
     }
 
@@ -906,9 +942,12 @@
         if (currentLocation) {
             searchLat = currentLocation.lat;
             searchLng = currentLocation.lng;
+            // currentLocation may have originated from navbar GPS flow; attempt to set readable city if present
+            // reverseGeocode already sets localStorage when available
         } else if (location && cities[location]) {
             searchLat = cities[location].lat;
             searchLng = cities[location].lng;
+            try { localStorage.setItem('currentCity', location); if (window.updateNavCityDisplay) window.updateNavCityDisplay(); } catch(e){}
         } else if (location) {
             showStatus('❌ Please select a valid city from suggestions', 'error');
             document.getElementById('loadingSpinner').classList.remove('active');
@@ -936,6 +975,26 @@
         displayResults();
         document.getElementById('loadingSpinner').classList.remove('active');
     }
+
+    // On page load, parse URL params to support /location-search?lat=..&lng=.. or ?city=Name
+    (function handleInitialParams() {
+        const params = new URLSearchParams(window.location.search);
+        const lat = params.get('lat');
+        const lng = params.get('lng');
+        const city = params.get('city');
+
+        if (lat && lng) {
+            currentLocation = { lat: parseFloat(lat), lng: parseFloat(lng) };
+            // Try to resolve city name for readability
+            reverseGeocode(currentLocation.lat, currentLocation.lng).then(c => {
+                if (c) document.getElementById('locationInput').value = c;
+                searchByLocation();
+            }).catch(() => searchByLocation());
+        } else if (city) {
+            document.getElementById('locationInput').value = city;
+            searchByLocation();
+        }
+    })();
 
     // Display results
     function displayResults() {
@@ -997,6 +1056,14 @@
 
         resultsSection.style.display = 'block';
         resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+        // Initialize map with results
+        try {
+            initializeMap(searchResults, currentLocation);
+            document.getElementById('mapContainer').style.display = 'block';
+        } catch (err) {
+            console.error('Map initialization failed', err);
+        }
     }
 
     // Resort results
@@ -1038,6 +1105,62 @@
             alert(`${name} added to favorites! ❤️`);
         } else {
             alert(`${name} is already in your favorites!`);
+        }
+    }
+
+    // Leaflet map initialization and marker rendering
+    let leafletMap = null;
+    let markersLayer = null;
+
+    function initializeMap(rests, userLoc) {
+        // Lazy load Leaflet if not already present
+        if (typeof L === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+            script.onload = () => initializeMap(rests, userLoc);
+            document.body.appendChild(script);
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+            document.head.appendChild(link);
+            return;
+        }
+
+        const mapEl = document.getElementById('map');
+        if (!mapEl) return;
+
+        if (!leafletMap) {
+            leafletMap = L.map('map');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(leafletMap);
+            markersLayer = L.layerGroup().addTo(leafletMap);
+        }
+
+        markersLayer.clearLayers();
+
+        const bounds = [];
+        // Add restaurant markers
+        rests.forEach(r => {
+            if (typeof r.lat === 'number' && typeof r.lng === 'number') {
+                const marker = L.marker([r.lat, r.lng]);
+                const distText = r.distance ? `${r.distance.toFixed(1)} km` : '—';
+                marker.bindPopup(`<strong>${escapeHtml(r.name || r.name)}</strong><br>${escapeHtml(r.city || '')}<br>Distance: ${distText}`);
+                markersLayer.addLayer(marker);
+                bounds.push([r.lat, r.lng]);
+            }
+        });
+
+        // Add user marker
+        if (userLoc && typeof userLoc.lat === 'number' && typeof userLoc.lng === 'number') {
+            const um = L.circleMarker([userLoc.lat, userLoc.lng], { radius: 8, color: '#ff5722', fillColor: '#ff8a65', fillOpacity: 1 }).bindPopup('You are here');
+            markersLayer.addLayer(um);
+            bounds.push([userLoc.lat, userLoc.lng]);
+        }
+
+        if (bounds.length > 0) {
+            leafletMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
         }
     }
 

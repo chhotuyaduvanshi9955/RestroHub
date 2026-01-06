@@ -157,3 +157,8 @@
 .form-control{
    border-radius:40px !important;
 }
+
+/* Standardize price display across pages */
+.price-range{ display:inline-flex; align-items:center; gap:8px; }
+.price-range .rupee-symbol{ color:#fe424d; font-weight:700; font-size:1rem; }
+.price-range .price-text{ color:#666; font-weight:600; font-size:0.95rem; }

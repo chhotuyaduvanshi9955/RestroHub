@@ -1343,10 +1343,10 @@
                         <label for="priceFilter">Price Range</label>
                         <select id="priceFilter">
                             <option value="">All Prices</option>
-                            <option value="1">Budget (₹)</option>
-                            <option value="2">Moderate (₹₹)</option>
-                            <option value="3">Premium (₹₹₹)</option>
-                            <option value="4">Luxury (₹₹₹₹)</option>
+                            <option value="200">Budget (₹ 200-400)</option>
+                            <option value="400">Moderate (₹ 400-800)</option>
+                            <option value="800">Premium (₹ 800-1500)</option>
+                            <option value="1500">Luxury (₹ 1500+)</option>
                         </select>
                     </div>
                 </div>
@@ -1377,18 +1377,18 @@
 </div>
 
 <script>
-    // Sample restaurant database
+    // Sample restaurant database (price is starting price)
     const sampleRestaurants = [
-        { id: 1, name: "Taj Indian Kitchen", cuisine: "Indian", location: "New Delhi", rating: 4.8, price: 3, emoji: "🍛" },
-        { id: 2, name: "Pasta Paradise", cuisine: "Italian", location: "Mumbai", rating: 4.6, price: 3, emoji: "🍝" },
-        { id: 3, name: "Dragon's Wok", cuisine: "Chinese", location: "Bangalore", rating: 4.5, price: 2, emoji: "🥢" },
-        { id: 4, name: "Sushi Haven", cuisine: "Japanese", location: "Hyderabad", rating: 4.7, price: 4, emoji: "🍣" },
-        { id: 5, name: "Burger Bliss", cuisine: "American", location: "Pune", rating: 4.4, price: 2, emoji: "🍔" },
-        { id: 6, name: "Spice Route", cuisine: "Indian", location: "Kolkata", rating: 4.9, price: 2, emoji: "🌶️" },
-        { id: 7, name: "Thai Street", cuisine: "Thai", location: "New Delhi", rating: 4.3, price: 2, emoji: "🥘" },
-        { id: 8, name: "Pizza Palace", cuisine: "Italian", location: "Bangalore", rating: 4.5, price: 2, emoji: "🍕" },
-        { id: 9, name: "El Mariachi", cuisine: "Mexican", location: "Mumbai", rating: 4.2, price: 2, emoji: "🌮" },
-        { id: 10, name: "Beijing Express", cuisine: "Chinese", location: "New Delhi", rating: 4.6, price: 2, emoji: "🥡" },
+        { id: 1, name: "Taj Indian Kitchen", cuisine: "Indian", location: "New Delhi", rating: 4.8, price: 800, emoji: "🍛" },
+        { id: 2, name: "Pasta Paradise", cuisine: "Italian", location: "Mumbai", rating: 4.6, price: 800, emoji: "🍝" },
+        { id: 3, name: "Dragon's Wok", cuisine: "Chinese", location: "Bangalore", rating: 4.5, price: 400, emoji: "🥢" },
+        { id: 4, name: "Sushi Haven", cuisine: "Japanese", location: "Hyderabad", rating: 4.7, price: 1500, emoji: "🍣" },
+        { id: 5, name: "Burger Bliss", cuisine: "American", location: "Pune", rating: 4.4, price: 400, emoji: "🍔" },
+        { id: 6, name: "Spice Route", cuisine: "Indian", location: "Kolkata", rating: 4.9, price: 400, emoji: "🌶️" },
+        { id: 7, name: "Thai Street", cuisine: "Thai", location: "New Delhi", rating: 4.3, price: 400, emoji: "🥘" },
+        { id: 8, name: "Pizza Palace", cuisine: "Italian", location: "Bangalore", rating: 4.5, price: 400, emoji: "🍕" },
+        { id: 9, name: "El Mariachi", cuisine: "Mexican", location: "Mumbai", rating: 4.2, price: 400, emoji: "🌮" },
+        { id: 10, name: "Beijing Express", cuisine: "Chinese", location: "New Delhi", rating: 4.6, price: 400, emoji: "🥡" },
     ];
 
     // Open discovery modal
@@ -1447,6 +1447,16 @@
         loadAllRestaurants();
     }
 
+    function getPriceRangeText(price) {
+        switch(price) {
+            case 200: return '₹ 200-400';
+            case 400: return '₹ 400-800';
+            case 800: return '₹ 800-1500';
+            case 1500: return '₹ 1500+';
+            default: return '₹ ' + (price || '—');
+        }
+    }
+
     // Display restaurants
     function displayRestaurants(restaurants) {
         const resultsContainer = document.getElementById('discoveryResults');
@@ -1480,8 +1490,8 @@
                             <i class="fas fa-map-pin"></i> ${r.location}
                         </div>
                         <div class="discovery-card-info-item">
-                            <i class="fas fa-rupee-sign"></i> 
-                            ${'₹'.repeat(r.price)}
+                            <i class="fas fa-rupee-sign"></i>
+                            ${getPriceRangeText(r.price)}
                         </div>
                     </div>
                     <div class="discovery-card-footer">

@@ -19,10 +19,19 @@
 }
 
 .navbar-brand {
-    font-size: 1.3rem;
+    font-size: 1.8rem;
     margin-left: 10px;
+    font-family: inria serif;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 3px;
 }
-
+.navbar-brand{
+  background: url("https://thumbs.dreamstime.com/b/autumn-fall-nature-scene-autumnal-park-beautiful-77869343.jpg");
+  -webkit-background-clip: text;
+  background-clip: text;
+  color:transparent;
+}
 #nav-logo {
     height: 50px;
     width: auto;
@@ -78,6 +87,49 @@
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.25);
     letter-spacing: 0.5px;
 }
+
+  .btn-outline-gps {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .btn-outline-gps:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* City badge in navbar */
+  .nav-city-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-left: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .nav-city-badge:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
+  .nav-city-badge .city-icon { color: #ffd700; font-size: 1.05rem }
+  .nav-city-badge .city-name { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+  .nav-city-badge.detecting { background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.06); }
 
 .btn-outline-search:hover {
     background: linear-gradient(135deg, #FF5252 0%, #FF6B5B 100%);
@@ -287,7 +339,7 @@
     <a href="/home" class="navbar-brand-link">
       <img src="/images/navlogo.png" alt="Restaurant Logo" id="nav-logo">
     </a>
-    <a href="/home" class="navbar-brand">RestroHub</a>
+    <a href="/home" class="navbar-brand">Tastifyr</a>
     
     <!-- search engine -->
     <div class="search-engine ms-auto me-3">
@@ -300,9 +352,18 @@
                 aria-label="Search"
                 autocomplete="off"
             />
-            <button class="btn btn-outline-search" id="searchBtn" type="button">
-                <i class="fas fa-search"></i>
-            </button>
+        <button class="btn btn-outline-search" id="searchBtn" type="button">
+          <i class="fas fa-search"></i>
+        </button>
+        <!-- GPS quick action button (uses current location) -->
+        <button class="btn btn-outline-gps" id="gpsNavbarBtn" type="button" title="Use my current location" onclick="useCurrentLocationFromNavbar()">
+          <i class="fas fa-location-arrow"></i>
+        </button>
+        <!-- Current city badge -->
+        <div id="navCity" class="nav-city-badge" onclick="goToLocationSearchFromNav()" title="View restaurants near this city">
+          <i class="fas fa-map-marker-alt city-icon"></i>
+          <span id="navCityName" class="city-name">Detect location</span>
+        </div>
             <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
         </div>
     </div>
@@ -327,6 +388,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/location-search"><i class="fas fa-map-location-dot"></i> Near Me</a>
         </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="/owners"><i class="fas fa-user-tie"></i> Owners</a>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="/service"><i class="fas fa-concierge-bell"></i> Services</a>
         </li>
@@ -376,6 +440,7 @@
             </ul>
           </li>
         <% } %>
+      
       
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -623,6 +688,7 @@ let selectedIndex = -1;
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
+    const gpsNavbarBtn = document.getElementById('gpsNavbarBtn');
     const autocompleteDropdown = document.getElementById('autocompleteDropdown');
 
     // Input event for autocomplete
@@ -668,6 +734,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Search button click
     searchBtn.addEventListener('click', performSearch);
+    // GPS button: disable if geolocation not available
+    if (gpsNavbarBtn) {
+      if (!navigator.geolocation) {
+        gpsNavbarBtn.disabled = true;
+        gpsNavbarBtn.title = 'Geolocation not available';
+      } else {
+        gpsNavbarBtn.disabled = false;
+      }
+    }
 
     // Close dropdown when clicking outside
     document.addEventListener('click', function(e) {
@@ -675,6 +750,34 @@ document.addEventListener('DOMContentLoaded', function() {
             autocompleteDropdown.classList.remove('show');
         }
     });
+
+    // Update navbar city display from localStorage
+    function updateNavCityDisplay() {
+      const nameEl = document.getElementById('navCityName');
+      const cityBadge = document.getElementById('navCity');
+      const city = localStorage.getItem('currentCity');
+      if (city && nameEl) {
+        nameEl.textContent = city;
+        if (city === 'Detecting...' || city === 'Detecting') {
+          cityBadge.classList.add('detecting');
+          cityBadge.querySelector('.city-icon').className = 'fas fa-spinner fa-spin city-icon';
+        } else {
+          cityBadge.classList.remove('detecting');
+          cityBadge.querySelector('.city-icon').className = 'fas fa-map-marker-alt city-icon';
+        }
+      } else if (nameEl) {
+        nameEl.textContent = 'Detect location';
+        cityBadge.classList.remove('detecting');
+        cityBadge.querySelector('.city-icon').className = 'fas fa-map-marker-alt city-icon';
+      }
+    }
+
+    // Expose globally so other pages (locationSearch) can call to update immediately
+    window.updateNavCityDisplay = updateNavCityDisplay;
+
+    // Call on load and update on storage events (other tabs)
+    updateNavCityDisplay();
+    window.addEventListener('storage', updateNavCityDisplay);
 
     function performSearch() {
         const query = searchInput.value.trim();
@@ -696,7 +799,14 @@ function fetchSuggestions(query) {
             console.log('API Response:', data);
             
             if (data.success && data.suggestions && data.suggestions.length > 0) {
-                autocompleteDropdown.innerHTML = data.suggestions.map((suggestion, index) => `
+                // prepend 'Use my current location' option
+                const currentLocItem = `
+                  <div class="autocomplete-item" onclick="useCurrentLocationFromNavbar()" data-value="__use_current_location__">
+                    <span class="autocomplete-item-type city">gps</span>
+                    <span class="autocomplete-item-text">Use my current location</span>
+                  </div>`;
+
+                autocompleteDropdown.innerHTML = currentLocItem + data.suggestions.map((suggestion, index) => `
                     <div class="autocomplete-item" data-value="${suggestion.value}" onclick="selectSuggestion('${suggestion.value.replace(/'/g, "\\'")}')">
                         <span class="autocomplete-item-type ${suggestion.type}">${suggestion.type}</span>
                         <span class="autocomplete-item-text">${escapeHtml(suggestion.value)}</span>
@@ -706,7 +816,11 @@ function fetchSuggestions(query) {
             } else {
                 // Show sample suggestions if no matches
                 autocompleteDropdown.innerHTML = `
-                    <div class="autocomplete-item" onclick="selectSuggestion('Delhi')">
+                  <div class="autocomplete-item" onclick="useCurrentLocationFromNavbar()">
+                    <span class="autocomplete-item-type city">gps</span>
+                    <span class="autocomplete-item-text">Use my current location</span>
+                  </div>
+                  <div class="autocomplete-item" onclick="selectSuggestion('Delhi')">
                         <span class="autocomplete-item-type city">city</span>
                         <span class="autocomplete-item-text">Delhi (Try this)</span>
                     </div>
@@ -734,7 +848,37 @@ function selectSuggestion(value) {
     const searchInput = document.getElementById('searchInput');
     searchInput.value = value;
     document.getElementById('autocompleteDropdown').classList.remove('show');
-    window.location.href = `/search?q=${encodeURIComponent(value)}`;
+  // Save chosen city for navbar and go to the location-search page
+  try { localStorage.setItem('currentCity', value); } catch (e) {}
+  window.location.href = `/location-search?city=${encodeURIComponent(value)}`;
+}
+
+function useCurrentLocationFromNavbar() {
+  const searchInput = document.getElementById('searchInput');
+  document.getElementById('autocompleteDropdown').classList.remove('show');
+  if (!navigator.geolocation) {
+    alert('Geolocation is not available in your browser');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(function(position) {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    try { localStorage.setItem('currentCoords', JSON.stringify({ lat, lng })); localStorage.setItem('currentCity', 'Detecting...'); } catch(e){}
+    // Redirect to location search with coords
+    window.location.href = `/location-search?lat=${encodeURIComponent(lat)}&lng=${encodeURIComponent(lng)}`;
+  }, function(err) {
+    alert('Unable to access your location: ' + err.message);
+  });
+}
+
+function goToLocationSearchFromNav() {
+  const city = localStorage.getItem('currentCity');
+  if (!city || city === 'Detecting...') {
+    // If we don't have a readable city, open GPS flow
+    useCurrentLocationFromNavbar();
+    return;
+  }
+  window.location.href = `/location-search?city=${encodeURIComponent(city)}`;
 }
 
 function updateSelection(items) {
